@@ -51,6 +51,7 @@ public class listeAdapterDetail extends ArrayAdapter<Series> {
                 view = convertView;
             }
 
+            //TEST
             uneSerie = getItem(position);
             tvTitreDetail=(TextView) view.findViewById(R.id.tvTitreDetail);
             tvAnneeDetail = (TextView) view.findViewById(R.id.tvAnneeDetail);
