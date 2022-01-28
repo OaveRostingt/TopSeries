@@ -1,12 +1,15 @@
 package com.btsinfo.topseriz;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Button;
+import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -23,68 +26,58 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-public class InfoActivity extends AppCompatActivity {
+public class Recherche extends AppCompatActivity {
 
-    private ListView lvSeries;
+    private ListView lvResutRech;
     private ArrayList<Series> listeSeries;
     private JsonArrayRequest jsonArrayRequest;
     private RequestQueue requestQueue;
-    private Button btDejaVu;
-    private Button btAVoir;
-    private Button btRech;
-    private String id;
     private Series uneSerie;
+    private String id;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_info);
+        setContentView(R.layout.activity_recherche);
 
-        lvSeries = (ListView) findViewById(R.id.lvSeries);
+        lvResutRech = findViewById(R.id.lvResutRech);
         listeSeries = new ArrayList<>();
-        btAVoir=(Button) findViewById(R.id.btAVoir);
-        btDejaVu=(Button) findViewById(R.id.btDejaVu);
-        btRech=(Button) findViewById(R.id.btRech);
 
-        btDejaVu.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dejaVu();
-            }
-        });
 
-        btAVoir.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                aVoir();
-            }
-        });
-
-        btRech.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), Recherche.class);
-                intent.putExtra("id_usr", id);
-                startActivity(intent);
-            }
-        });
-        chargerListe();
 
         Intent IIntent = getIntent();
-         id = IIntent.getStringExtra("id_usr");
+        id = IIntent.getStringExtra("id_usr");
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu,menu);
+        MenuItem menuItem = menu.findItem(R.id.action_search);
+        SearchView searchView = (SearchView) menuItem.getActionView();
+        searchView.setQueryHint("Recherchez ...");
 
-    public void dejaVu(){
-        Intent intent = new Intent(getApplicationContext(), DejaVuActivity.class);
-        intent.putExtra("id_usr", id);
-        startActivity(intent);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+
+                if( ! searchView.isIconified()) {
+                    searchView.setIconified(true);
+                }
+                menuItem.collapseActionView();
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                chargerListe();
+
+                return false;
+            }
+        });
+        return super.onCreateOptionsMenu(menu);
     }
-    public void aVoir(){
-        Intent intent = new Intent(getApplicationContext(), AVoirActivity.class);
-        intent.putExtra("id_usr", id);
-        startActivity(intent);
-    }
+
     private void chargerListe() {
         jsonArrayRequest = new JsonArrayRequest(BDPages.affiche_url, new Response.Listener<JSONArray>() {
             @Override
@@ -111,14 +104,14 @@ public class InfoActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), error.toString(), Toast.LENGTH_SHORT).show();
             }
         });
-        requestQueue = Volley.newRequestQueue(InfoActivity.this);
+        requestQueue = Volley.newRequestQueue(Recherche.this);
         requestQueue.add(jsonArrayRequest);
     }
 
     private void setAdapterSerie(ArrayList<Series> listeSeries) {
         ListAdapter listeAdapter = new listeAdapter(this, listeSeries);
-        lvSeries.setAdapter(listeAdapter);
-        lvSeries.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        lvResutRech.setAdapter(listeAdapter);
+        lvResutRech.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 startViewActivity(i);
@@ -133,6 +126,5 @@ public class InfoActivity extends AppCompatActivity {
         intent.putExtra("id_usr", String.valueOf(id));
         startActivity(intent);
     }
-
 
 }

@@ -45,13 +45,12 @@ public class listeAdapterDetail extends ArrayAdapter<Series> {
 
             if (convertView==null){
                 LayoutInflater layoutInflater=(LayoutInflater) this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                view = layoutInflater.inflate(R.layout.serie,parent,false);
+                view = layoutInflater.inflate(R.layout.une_fiche_serie,parent,false);
             }
             else {
                 view = convertView;
             }
 
-            //TEST
             uneSerie = getItem(position);
             tvTitreDetail=(TextView) view.findViewById(R.id.tvTitreDetail);
             tvAnneeDetail = (TextView) view.findViewById(R.id.tvAnneeDetail);

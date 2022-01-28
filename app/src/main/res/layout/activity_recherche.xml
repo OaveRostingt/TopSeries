@@ -4,12 +4,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    tools:context=".Recherche"
     android:orientation="vertical"
-    android:background="@color/black"
-    tools:context=".FicheSerie">
+    android:background="@color/black">
+
+
 
     <ListView
+        android:id="@+id/lvResutRech"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/lvSerie"/>
+        android:layout_height="match_parent">
+
+
+    </ListView>
 </LinearLayout>
